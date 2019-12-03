@@ -51,6 +51,8 @@
 
 (defmethod optimize-filter :=
   [[_ field [_ inst unit]] report-timezone]
+  (println "inst is : " report-timezone)
+  (println "report-timezone is : " report-timezone)
   (let [[_ _ datetime-field-unit] (mbql.u/match-one field :datetime-field)]
     (when (= unit datetime-field-unit)
       (let [field' (change-datetime-field-unit-to-default field)]
@@ -91,7 +93,7 @@
      [:>= field' [:absolute-datetime (lower-bound unit lower report-timezone) :default]]
      [:<  field' [:absolute-datetime (upper-bound unit upper report-timezone) :default]]]))
 
-(defn- optimize-datetime-filters* [{query-type :type, {:keys [report-timezone]} :settings, :as query}]
+(defn- optimize-datetime-filters* [{query-type :type, driver :driver, {:keys [report-timezone]} :settings, :as query}]
   (if (not= query-type :query)
     query
     (mbql.u/replace query

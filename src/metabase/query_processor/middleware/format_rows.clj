@@ -22,7 +22,7 @@
 (defn format-rows
   "Format individual query result values as needed.  Ex: format temporal values as iso8601 strings w/ timezone."
   [qp]
-  (fn [{:keys [settings], {:keys [format-rows?] :or {format-rows? true}} :middleware, :as query}]
+  (fn [{:keys [settings], driver :driver, {:keys [format-rows?] :or {format-rows? true}} :middleware, :as query}]
     (let [results (qp query)]
       (cond-> results
-        (and format-rows? (:rows results)) (update :rows (partial format-rows* settings))))))
+        (and format-rows? (:rows results)) (update :rows (if (= driver :mongo) (partial format-rows* {:report-timezone "UTC"}) (partial format-rows* settings)))))))

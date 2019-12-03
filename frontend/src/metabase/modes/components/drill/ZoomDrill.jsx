@@ -14,6 +14,12 @@ export default ({
   settings,
 }: ClickActionProps): ClickAction[] => {
   const dimensions = (clicked && clicked.dimensions) || [];
+  if (dimensions && dimensions.length == 1) {
+    let dimension = dimensions[0];
+    if (dimension.column.unit === "day" && dimension.value && dimension.value.length > 10) {
+      dimension.value = dimension.value.substring(0,10);
+    }
+  }
   const drilldown = drillDownForDimensions(dimensions, question.metadata());
   if (!drilldown) {
     return [];

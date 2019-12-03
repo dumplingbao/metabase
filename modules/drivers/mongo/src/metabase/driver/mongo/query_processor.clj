@@ -175,10 +175,10 @@
     (mongo-let [column (let [initial-rvalue (->initial-rvalue field-clause)]
                          (cond
                            (isa? (:special_type field) :type/UNIXTimestampMilliseconds)
-                           {$add [(java.util.Date. 0) initial-rvalue]}
+                           {$add [(java.util.Date. (* 8000 60 60)) initial-rvalue]}
 
                            (isa? (:special_type field) :type/UNIXTimestampSeconds)
-                           {$add [(java.util.Date. 0) {$multiply [initial-rvalue 1000]}]}
+                           {$add [(java.util.Date. (* 8 60 60)) {$multiply [initial-rvalue 1000]}]}
 
                            :else initial-rvalue))]
       (let [stringify (fn stringify
@@ -630,7 +630,8 @@
      (for [[k v] row]
        [k (if (and (map? v)
                    (contains? v :___date))
-            (du/->Timestamp (:___date v) (TimeZone/getDefault))
+            ;(du/->Timestamp (:___date v) (TimeZone/getDefault))
+            (du/->Timestamp (:___date v) "UTC")
             v)]))))
 
 
