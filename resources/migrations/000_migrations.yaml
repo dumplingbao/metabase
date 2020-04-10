@@ -3625,7 +3625,6 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-<<<<<<< HEAD
               # - column:
               #     name: show_attach_only
               #     type: boolean
@@ -3633,8 +3632,6 @@ databaseChangeLog:
               #     defaultValueBoolean: false
               #     constraints:
               #       nullable: false
-=======
->>>>>>> 7ba9cf768ee706029b91a64c6c970fddee68de3c
   - changeSet:
       id: 55
       author: camsaul
