@@ -1,0 +1,41 @@
+:local .SortOrder {
+  display: inline-block;
+  box-sizing: border-box;
+  text-decoration: none;
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  font-weight: bold;
+  font-family: var(--default-font-family), sans-serif;
+  border: none;
+  background: transparent;
+  color: color(var(--color-bg-light) shade(40%));
+}
+
+:local .SortOrder:hover {
+  color: color(var(--color-brand));
+}
+
+:local .DescriptionText {
+  color: var(--color-text-medium);
+  font-weight: bold;
+}
+:local .charthr {
+  margin-top: 0px;
+  margin-top: var(--margin-2);
+
+  margin-bottom: 0px;
+  margin-bottom: var(--margin-2);
+
+  margin-left: -32px;
+  margin-left: calc(-1 * var(--margin-4));
+
+  margin-right: -32px;
+  margin-right: calc(-1 * var(--margin-4));
+
+  height: 0;
+  border: 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.removable-header {
+  background: var(--color-bg-medium);
+}

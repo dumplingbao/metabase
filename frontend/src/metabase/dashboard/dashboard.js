@@ -115,7 +115,7 @@ export const SET_PARAMETER_INDEX = "metabase/dashboard/SET_PARAMETER_INDEX";
 export const SET_PARAMETER_DEFAULT_VALUE =
   "metabase/dashboard/SET_PARAMETER_DEFAULT_VALUE";
 
-function getDashboardType(id) {
+export function getDashboardType(id) {
   if (Utils.isUUID(id)) {
     return "public";
   } else if (Utils.isJWT(id)) {

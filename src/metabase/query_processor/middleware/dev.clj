@@ -17,7 +17,8 @@
     (s/optional-key :cols) [{s/Keyword s/Any}]
     :rows                  s/Any
     s/Keyword              s/Any}
-   (complement :columns)
+   ;; 放开columns权限
+   (complement :columnsAA)
    "QP results should no longer include :columns."))
 
 (def ^{:arglists '([results])} validate-results

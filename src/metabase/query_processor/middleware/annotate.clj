@@ -536,7 +536,9 @@
     (-> (format-row results cols)
         (assoc :cols cols)
         ;; remove `:columns` which we no longer need
-        (dissoc :columns))))
+        ;; 放开colums权限
+        ;; (dissoc :columns)
+        )))
 
 (defn add-column-info
   "Middleware for adding type information about the columns in the query results (the `:cols` key)."
