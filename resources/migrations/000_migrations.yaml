@@ -3622,13 +3622,13 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-              - column:
-                  name: show_attach_only
-                  type: boolean
-                  remarks: 'only show the attachments in the email'
-                  defaultValueBoolean: false
-                  constraints:
-                    nullable: false
+              # - column:
+              #     name: show_attach_only
+              #     type: boolean
+              #     remarks: 'only show the attachments in the email'
+              #     defaultValueBoolean: false
+              #     constraints:
+              #       nullable: false
   - changeSet:
       id: 55
       author: camsaul
