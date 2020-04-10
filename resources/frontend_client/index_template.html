@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/app/assets/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/app/assets/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/app/assets/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{{application_logo_url}}}">
+    <link rel="icon" sizes="32x32" href="{{{application_logo_url}}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{{application_logo_url}}}">
     <link rel="manifest" href="/app/assets/img/site.webmanifest">
     <link rel="mask-icon" href="/app/assets/img/safari-pinned-tab.svg" color="#62a8e6">
-    <link rel="shortcut icon" href="/app/assets/img/favicon.ico">
+    <link rel="bookmark" href="{{{application_logo_url}}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{{application_logo_url}}}">
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="msapplication-config" content="/app/assets/img/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
@@ -21,7 +22,7 @@
 
     {{{embedCode}}}
 
-    <title>Metabase</title>
+    <title>{{{bootstrapJSON.application_name}}}</title>
 
     <base href="{{{baseHref}}}" />
 

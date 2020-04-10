@@ -135,10 +135,10 @@
   (let [field-name (str \$ (field->name field "."))]
     (cond
       (isa? (:special_type field) :type/UNIXTimestampMilliseconds)
-      {$add [(java.util.Date. 0) field-name]}
+      {$add [(java.util.Date. (* 8 3600 1000)) field-name]}
 
       (isa? (:special_type field) :type/UNIXTimestampSeconds)
-      {$add [(java.util.Date. 0) {$multiply [field-name 1000]}]}
+      {$add [(java.util.Date. (* 8 3600 1000)) {$multiply [field-name 1000]}]}
 
       :else field-name)))
 

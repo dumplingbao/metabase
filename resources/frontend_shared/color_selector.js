@@ -4352,7 +4352,7 @@ function compileRowFormatters(formats) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getColorScale = exports.getRandomColor = exports.HARMONY_GROUP_SIZE = exports.desaturated = exports.saturated = exports.normal = exports.harmony = exports.aliases = undefined;
+exports.getColorScale = exports.getNavBarColor = exports.getRandomColor = exports.HARMONY_GROUP_SIZE = exports.desaturated = exports.saturated = exports.normal = exports.harmony = exports.aliases = undefined;
 
 var _PREFERRED_COLORS;
 
@@ -4423,7 +4423,10 @@ var colors = {
 exports.default = colors;
 var aliases = exports.aliases = {
   summarize: "accent1",
-  filter: "accent7"
+  filter: "accent7",
+  database: "accent2",
+  dashboard: "brand",
+  pulse: "accent4"
 };
 
 var harmony = exports.harmony = [];
@@ -4484,6 +4487,10 @@ var getRandomColor = exports.getRandomColor = function getRandomColor(family) {
   // $FlowFixMe: Object.values doesn't preserve the type :-/
   var colors = Object.values(family);
   return colors[Math.floor(Math.random() * colors.length)];
+};
+
+var getNavBarColor = exports.getNavBarColor = function getNavBarColor() {
+  return colors.brand;
 };
 
 var getColorScale = exports.getColorScale = function getColorScale(extent, colors) {
@@ -8458,7 +8465,7 @@ var Harmonizer = function () {
 		}
 		return color;
 	};
-	
+
 	var harmonize = function (color, degrees) {
 		var ret = [], hsl, h, s, l, a, i, degree;
 		hsl = color.hsl();

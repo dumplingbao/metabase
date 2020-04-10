@@ -14,11 +14,47 @@ import EmbeddingLegalese from "./components/widgets/EmbeddingLegalese";
 import EmbeddingLevel from "./components/widgets/EmbeddingLevel";
 import LdapGroupMappingsWidget from "./components/widgets/LdapGroupMappingsWidget";
 import FormattingWidget from "./components/widgets/FormattingWidget";
+import LogoUpload from "./components/widgets/LogoUpload";
+import ColorSchemeWidget from "./components/widgets/ColorSchemeWidget";
 
 import { UtilApi } from "metabase/services";
+import WatermarkColorWidget from "metabase/admin/settings/components/widgets/WatermarkColorWidget";
+import WatermarkPreviewWidget from "metabase/admin/settings/components/widgets/WatermarkPreviewWidget";
 
 /* Note - do not translate slugs */
 const SECTIONS = [
+  {
+    name: t`whitelabel`,
+    slug: "whitelabel",
+    settings: [
+      {
+        key: "application-name",
+        display_name: t`application-name`,
+        type: "string",
+      },
+      {
+        key: "application-colors",
+        display_name: t`application-colors`,
+        widget: ColorSchemeWidget,
+      },
+      {
+        key: "application-logo-url",
+        display_name: t`application-logo-url`,
+        type: "string",
+        widget: LogoUpload,
+      },
+      // {
+      //   key: "application-favicon-url",
+      //   display_name: t`application-favicon-url`,
+      //   type: "string",
+      // },
+      // {
+      //   key: "landing-page",
+      //   display_name: t`application-favicon-url`,
+      //   type: "string",
+      // }
+    ],
+  },
   {
     name: t`Setup`,
     slug: "setup",
@@ -68,6 +104,41 @@ const SECTIONS = [
         key: "enable-watermark",
         display_name: t`开启水印功能`,
         type: "boolean",
+      },
+      {
+        key: "watermark-content",
+        display_name: t`水印内容配置`,
+        type: "select",
+        options: [
+          { value: "watermark-content-1",
+            name: t`用户名 年-月-日 时:分`
+          },
+          {
+            value: "watermark-content-2",
+            name: t`用户名 年-月-日`,
+          },
+          { value: "watermark-content-3",
+            name: t`用户名 年/月/日 时:分`
+          },
+          {
+            value: "watermark-content-4",
+            name: t`用户名 年/月/日`,
+          },
+        ],
+        defaultValue: "watermark-content-1",
+        getHidden: settings => !settings["enable-watermark"],
+      },
+      {
+        key: "watermark-color",
+        display_name: t`水印颜色`,
+        widget: WatermarkColorWidget,
+        getHidden: settings => !settings["enable-watermark"],
+      },
+      {
+        key: "-watermark-config",
+        display_name: t`水印预览`,
+        widget: WatermarkPreviewWidget,
+        getHidden: settings => !settings["enable-watermark"],
       },
       {
         key: "anon-tracking-enabled",
@@ -492,6 +563,9 @@ export const getSections = createSelector(
         const apiSetting =
           settingsByKey[setting.key] && settingsByKey[setting.key][0];
         if (apiSetting) {
+          if (apiSetting.description) {
+            apiSetting.description = apiSetting.description.replace(/Metabase/g, MetabaseSettings.get("application-name") || MetabaseSettings.get("application_name"))
+          }
           return {
             placeholder: apiSetting.default,
             ...apiSetting,

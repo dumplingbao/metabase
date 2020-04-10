@@ -5,6 +5,7 @@ import Color from "color";
 import { Harmonizer } from "color-harmony";
 
 import { deterministicAssign } from "./deterministic";
+import MetabaseSettings from "metabase/lib/settings";
 
 export type ColorName = string;
 export type ColorString = string;
@@ -15,6 +16,7 @@ export type ColorFamily = { [name: ColorName]: ColorString };
 /* eslint-disable no-color-literals */
 const colors = {
   brand: "#509EE3",
+  nav: undefined,
   accent1: "#88BF4D",
   accent2: "#A989C5",
   accent3: "#EF8C8C",
@@ -46,6 +48,42 @@ const colors = {
   "saturated-red": "#ED6E6E",
   "saturated-yellow": "#F9CF48",
 };
+
+export const originalColors = {
+  brand: "#509EE3",
+  nav: undefined,
+  accent1: "#88BF4D",
+  accent2: "#A989C5",
+  accent3: "#EF8C8C",
+  accent4: "#F9D45C",
+  accent5: "#F2A86F",
+  accent6: "#98D9D9",
+  accent7: "#7172AD",
+  "admin-navbar": "#7172AD",
+  white: "#FFFFFF",
+  black: "#2E353B",
+  success: "#84BB4C",
+  error: "#ED6E6E",
+  warning: "#F9CF48",
+  "text-dark": "#2E353B",
+  "text-medium": "#74838f",
+  "text-light": "#C7CFD4",
+  "text-white": "#FFFFFF",
+  "bg-black": "#2E353B",
+  "bg-dark": "#93A1AB",
+  "bg-medium": "#EDF2F5",
+  "bg-light": "#F9FBFC",
+  "bg-white": "#FFFFFF",
+  shadow: "rgba(0,0,0,0.08)",
+  border: "#F0F0F0",
+  /* Saturated colors for the SQL editor. Shouldn't be used elsewhere since they're not white-labelable. */
+  "saturated-blue": "#2D86D4",
+  "saturated-green": "#70A63A",
+  "saturated-purple": "#885AB1",
+  "saturated-red": "#ED6E6E",
+  "saturated-yellow": "#F9CF48",
+};
+
 /* eslint-enable no-color-literals */
 export default colors;
 
@@ -71,6 +109,7 @@ syncColors();
 export function syncColors() {
   syncHarmony();
   syncDeprecatedColorFamilies();
+  updateColorsInit();
 }
 
 export const HARMONY_GROUP_SIZE = 8; // match initialColors length below
@@ -128,6 +167,21 @@ export const getRandomColor = (family: ColorFamily): ColorString => {
   // $FlowFixMe: Object.values doesn't preserve the type :-/
   const colors: ColorString[] = Object.values(family);
   return colors[Math.floor(Math.random() * colors.length)];
+};
+
+export const getNavBarColor = () => {
+  return colors["nav"] || colors["brand"];
+};
+
+function updateColorsInit(){
+  let applicationColorsSetting = MetabaseSettings.get("application_colors");
+  Object.assign(colors, applicationColorsSetting);
+}
+
+export const updateColors = (family: ColorFamily) => {
+  Object.assign(colors, originalColors);
+  Object.assign(colors, family);
+
 };
 
 type ColorScale = (input: number) => ColorString;

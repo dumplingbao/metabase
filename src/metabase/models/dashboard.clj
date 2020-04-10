@@ -55,7 +55,7 @@
   (db/delete! DashboardCard :dashboard_id (u/get-id dashboard)))
 
 (defn- pre-insert [dashboard]
-  (let [defaults {:parameters []}]
+  (let [defaults {:parameters [] :setting {}}]
     (merge defaults dashboard)))
 
 
@@ -63,7 +63,7 @@
   models/IModel
   (merge models/IModelDefaults
          {:properties  (constantly {:timestamped? true})
-          :types       (constantly {:parameters :json, :embedding_params :json})
+          :types       (constantly {:parameters :json, :embedding_params :json, :setting :json})
           :pre-delete  pre-delete
           :pre-insert  pre-insert
           :post-select public-settings/remove-public-uuid-if-public-sharing-is-disabled})

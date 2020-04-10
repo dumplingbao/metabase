@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { space } from "styled-system";
 
 import * as Urls from "metabase/lib/urls";
-import { color, darken, lighten } from "metabase/lib/colors";
+import { color, darken, lighten, getNavBarColor } from "metabase/lib/colors";
 
 import Icon, { IconWrapper } from "metabase/components/Icon";
 import Link from "metabase/components/Link";
@@ -291,6 +291,7 @@ export default class Navbar extends Component {
         // NOTE: DO NOT REMOVE `Nav` CLASS FOR NOW, USED BY MODALS, FULLSCREEN DASHBOARD, ETC
         // TODO: hide nav using state in redux instead?
         className="Nav relative bg-brand text-white z3 flex-no-shrink"
+        style={{ backgroundColor: color(getNavBarColor()) }}
         align="center"
         py={1}
         pr={2}

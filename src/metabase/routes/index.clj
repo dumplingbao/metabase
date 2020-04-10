@@ -69,12 +69,14 @@
 (defn- load-entrypoint-template [entrypoint-name embeddable? uri]
   (load-template
    (str "frontend_client/" entrypoint-name ".html")
-   (let [{:keys [anon_tracking_enabled google_auth_client_id], :as public-settings} (public-settings/public-settings)]
+   (let [{:keys [anon_tracking_enabled google_auth_client_id, application_favicon_url, application_logo_url], :as public-settings} (public-settings/public-settings)]
      {:bootstrapJS        (load-inline-js "index_bootstrap")
       :googleAnalyticsJS  (load-inline-js "index_ganalytics")
       :bootstrapJSON      (escape-script (json/generate-string public-settings))
       :localizationJSON   (escape-script (load-localization))
       :uri                (h.util/escape-html uri)
+      :application_favicon_url (str application_favicon_url)
+      :application_logo_url (str application_logo_url)
       :baseHref           (h.util/escape-html (base-href))
       :embedCode          (when embeddable? (embed/head uri))
       :enableGoogleAuth   (boolean google_auth_client_id)

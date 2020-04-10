@@ -133,7 +133,7 @@ export default class TableInteractive extends Component {
   static defaultProps = {
     isPivoted: false,
     renderTableHeaderWrapper: children => (
-      <div className="cellData">{children}</div>
+      <div className="cellData" style={{border: 0, color: "white", fontWeight: 900, margin: "0 auto", width: "-webkit-fill-available"}}>{children}</div>
     ),
     renderTableCellWrapper: children => (
       <div className="cellData">{children}</div>
@@ -431,7 +431,7 @@ export default class TableInteractive extends Component {
   }
 
   cellRenderer = ({ key, style, rowIndex, columnIndex }: CellRendererProps) => {
-    const { data, settings } = this.props;
+    const { data, settings, getGroupTitle } = this.props;
     const { dragColIndex } = this.state;
     const { rows, cols } = data;
 
@@ -459,7 +459,10 @@ export default class TableInteractive extends Component {
           left: this.getColumnLeft(style, columnIndex),
           // add a transition while dragging column
           transition: dragColIndex != null ? "left 200ms" : null,
-          backgroundColor,
+          // backgroundColor,
+          borderRightWidth: 2,
+          borderRightColor: 'white',
+          backgroundColor: cols.length >= 2 && (columnIndex + 1 < cols.length && getGroupTitle(columnIndex+1) === getGroupTitle(columnIndex) || columnIndex - 1 >= 0 && getGroupTitle(columnIndex-1) === getGroupTitle(columnIndex)) ? 'rgba(243, 244, 245, 1)' : backgroundColor,
         }}
         className={cx("TableInteractive-cellWrapper text-dark", {
           "TableInteractive-cellWrapper--firstColumn": columnIndex === 0,
@@ -592,12 +595,14 @@ export default class TableInteractive extends Component {
     <div style={{ backgroundColor: 'red', textAlign: 'center',
       left: this.getColumnLeft(style, columnIndex) }}>
       <div className="cellData" style={{ position: 'absolute',
-        backgroundColor: 'aqua',
+        backgroundColor: 'rgba(243, 244, 245, 1)',
+        color: "#509ee3",
         textAlign: 'center', width: this.getGroupWidth({ index: columnIndex }),
         // border: (columnIndex + 1 < cols.length && getGroupTitle(columnIndex+1) === getGroupTitle(columnIndex) && (columnIndex === 0 || columnIndex > 0 && getGroupTitle(columnIndex-1) !== getGroupTitle(columnIndex))) ? '1px solid rgb(238,238,238)' :'none',
         height: (columnIndex + 1 < cols.length && getGroupTitle(columnIndex+1) === getGroupTitle(columnIndex) && (columnIndex === 0 || columnIndex > 0 && getGroupTitle(columnIndex-1) !== getGroupTitle(columnIndex))) ? 50 : 0,
         fontSize: '1.2em',
-        left: this.getColumnLeft(style, columnIndex) - 7 }}>
+        margin: 0,
+        left: this.getColumnLeft(style, columnIndex) }}>
         {
           (columnIndex + 1 < cols.length && getGroupTitle(columnIndex+1) === getGroupTitle(columnIndex) && (columnIndex === 0 || columnIndex > 0 && getGroupTitle(columnIndex-1) !== getGroupTitle(columnIndex)) && getGroupTitle(columnIndex))
         }
@@ -656,7 +661,12 @@ export default class TableInteractive extends Component {
             borderLeftWidth: 0,
             top: 22,
             height: 27,
-            borderRightWidth: 0,
+            borderRightWidth: 2,
+            borderRightColor: 'white',
+            // backgroundColor: 'rgb(85, 152, 209, 1)',
+            // backgroundColor: 'aqua',
+            backgroundColor: '#4f9ee3',
+            // backgroundColor: cols.length >= 2 && (columnIndex + 1 < cols.length && getGroupTitle(columnIndex+1) === getGroupTitle(columnIndex) || columnIndex - 1 >= 0 && getGroupTitle(columnIndex-1) === getGroupTitle(columnIndex)) ? 'aqua' : 'white',
             overflow: "visible" /* ensure resize handle is visible */,
             // use computed left if dragging, except for the dragged header
             left: isDragging
@@ -698,6 +708,7 @@ export default class TableInteractive extends Component {
                 <Icon
                   className="Icon ml1"
                   name={isAscending ? "chevronup" : "chevrondown"}
+                  style={{opacity: 1}}
                   size={8}
                 />
               )}

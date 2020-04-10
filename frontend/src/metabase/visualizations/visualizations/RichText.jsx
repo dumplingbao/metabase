@@ -1,8 +1,9 @@
 /* @flow */
 
 import React, { Component } from "react";
-import ReactMarkdown from "react-markdown/with-html";
-import styles from "./Text.css";
+import styles from "./RichText.css";
+import 'braft-editor/dist/index.css'
+import BraftEditor from 'braft-editor'
 
 import Icon from "metabase/components/Icon";
 
@@ -10,6 +11,7 @@ import cx from "classnames";
 import { t } from "ttag";
 
 import type { VisualizationProps } from "metabase/meta/types/Visualization";
+import {absolute} from "metabase/lib/query_time";
 
 const HEADER_ICON_SIZE = 16;
 
@@ -17,10 +19,10 @@ const HEADER_ACTION_STYLE = {
   padding: 4,
 };
 
-type State = {
-  isShowingRenderedOutput: boolean,
-  text: string,
-};
+// type State = {
+//   isShowingRenderedOutput: boolean,
+//   text: string,
+// };
 
 const getSettingsStyle = settings => ({
   "align-center": settings["text.align_horizontal"] === "center",
@@ -29,22 +31,57 @@ const getSettingsStyle = settings => ({
   "justify-end": settings["text.align_vertical"] === "bottom",
 });
 
-export default class Text extends Component {
+export default class RichText extends Component {
   props: VisualizationProps;
-  state: State;
+  // state: State;
+
+  state = {
+    // editorState: BraftEditor.createEditorState(this.props.card.visualization_settings.richText), // 设置编辑器初始内容
+    outputHTML: '<p></p>',
+    isShowingRenderedOutput: Boolean,
+    text: String,
+  };
 
   constructor(props: VisualizationProps) {
     super(props);
-
     this.state = {
+      // editorState: BraftEditor.createEditorState(props.settings.richText), // 设置编辑器初始内容
       isShowingRenderedOutput: false,
       text: "",
     };
   }
 
-  static uiName = "Text";
-  static identifier = "text";
-  static iconName = "text";
+  componentDidMount () {
+    this.isLivinig = true;
+    // 3秒后更改编辑器内容
+    setTimeout(this.setEditorContentAsync, 3000)
+  }
+
+  componentWillUnmount () {
+    this.isLivinig = false
+  }
+
+  handleChange = (editorState) => {
+    this.setState({
+      editorState: editorState,
+      outputHTML: editorState.toHTML()
+    });
+    console.log("editorState.toHTML() is :", editorState.toHTML());
+    this.props.onUpdateVisualizationSettings({
+      // editorState: editorState,
+      richText: editorState.toHTML()
+    });
+  };
+
+  setEditorContentAsync = () => {
+    this.isLivinig && this.setState({
+      editorState: BraftEditor.createEditorState(this.props.card.visualization_settings.richText)
+    })
+  };
+
+  static uiName = "RichText";
+  static identifier = "richText";
+  static iconName = "richText";
 
   static disableSettingsConfig = false;
   static noHeader = true;
@@ -103,10 +140,6 @@ export default class Text extends Component {
     }
   }
 
-  handleTextChange(text: string) {
-    this.props.onUpdateVisualizationSettings({ text: text });
-  }
-
   onEdit() {
     this.setState({ isShowingRenderedOutput: false });
   }
@@ -124,6 +157,8 @@ export default class Text extends Component {
       isEditing,
     } = this.props;
     const isSmall = gridSize && gridSize.width < 4;
+    const { editorState, outputHTML } = this.state;
+    console.log("this.state.isShowingRenderedOutput is : ", this.state.isShowingRenderedOutput);
 
     if (isEditing) {
       return (
@@ -142,26 +177,41 @@ export default class Text extends Component {
             onPreview={this.onPreview.bind(this)}
           />
           {this.state.isShowingRenderedOutput ? (
-            <ReactMarkdown
-              className={cx(
-                "full flex-full flex flex-column text-card-markdown",
-                styles["text-card-markdown"],
-                getSettingsStyle(settings),
-              )}
-              source={settings.text}
-              escapeHtml={false}
-            />
+            <div className={cx(
+              "drag-disabled",
+            )} style={{marginBottom: 30,
+              border: "1px solid #d1d1d1",
+              borderRadius: 5,
+              cursor: "auto",
+              height: "85%",
+              width: "95%",
+              position: "absolute",
+              overflow: "auto"}}
+             dangerouslySetInnerHTML={{__html: this.state.editorState.toHTML()}}
+            >
+
+            </div>
           ) : (
-            <textarea
-              className={cx(
-                "full flex-full flex flex-column bg-light bordered drag-disabled",
-                styles["text-card-textarea"],
-              )}
-              name="text"
-              placeholder={t`Write here, and use Markdown if you'd like`}
-              value={settings.text}
-              onChange={e => this.handleTextChange(e.target.value)}
-            />
+            <div className={cx(
+              "drag-disabled",
+            )} style={{marginBottom: 30,
+              border: "1px solid #d1d1d1",
+              borderRadius: 5,
+              cursor: "auto",
+              height: "85%",
+              width: "95%",
+              position: "absolute",
+              overflow: "auto"}}>
+              <BraftEditor
+                className={cx(
+                  "full flex-full flex flex-column text-card-markdown",
+                  styles["text-card-textarea"],
+                  getSettingsStyle(settings),
+                )}
+                value={editorState}
+                onChange={this.handleChange}
+              />
+            </div>
           )}
         </div>
       );
@@ -177,15 +227,20 @@ export default class Text extends Component {
             { pl0: !settings["dashcard.background"] },
           )}
         >
-          <ReactMarkdown
-            className={cx(
-              "full flex-full flex flex-column text-card-markdown",
-              styles["text-card-markdown"],
-              getSettingsStyle(settings),
-            )}
-            source={settings.text}
-            escapeHtml={false}
-          />
+          <div className={cx(
+            "drag-disabled",
+          )} style={{marginBottom: 30,
+            // border: "1px solid #d1d1d1",
+            // borderRadius: 5,
+            cursor: "auto",
+            position: "absolute",
+            height: "100%",
+            width: "100%",
+            overflow: "auto"}}
+               dangerouslySetInnerHTML={{__html: this.state.editorState ? this.state.editorState.toHTML() : ""}}
+          >
+
+          </div>
         </div>
       );
     }
@@ -193,11 +248,11 @@ export default class Text extends Component {
 }
 
 const TextActionButtons = ({
-  actionButtons,
-  isShowingRenderedOutput,
-  onEdit,
-  onPreview,
-}) => (
+                             actionButtons,
+                             isShowingRenderedOutput,
+                             onEdit,
+                             onPreview,
+                           }) => (
   <div className="Card-title">
     <div className="absolute top left p1 px2">
       <span

@@ -213,6 +213,7 @@
         dashboard-data {:name                (or name (:name existing-dashboard))
                         :description         (or description (:description existing-dashboard))
                         :parameters          (or (:parameters existing-dashboard) [])
+                        :setting             (or (:setting existing-dashboard) {})
                         :creator_id          api/*current-user-id*
                         :collection_id       collection_id
                         :collection_position collection_position}
@@ -252,12 +253,13 @@
   Usually, you just need write permissions for this Dashboard to do this (which means you have appropriate
   permissions for the Cards belonging to this Dashboard), but to change the value of `enable_embedding` you must be a
   superuser."
-  [id :as {{:keys [description name parameters caveats points_of_interest show_in_getting_started enable_embedding
+  [id :as {{:keys [description name parameters caveats setting points_of_interest show_in_getting_started enable_embedding
                    embedding_params position archived collection_id collection_position]
             :as dash-updates} :body}]
   {name                    (s/maybe su/NonBlankString)
    description             (s/maybe s/Str)
    caveats                 (s/maybe s/Str)
+   setting                 (s/maybe su/Map)
    points_of_interest      (s/maybe s/Str)
    show_in_getting_started (s/maybe s/Bool)
    enable_embedding        (s/maybe s/Bool)
@@ -283,7 +285,7 @@
          ;; non-nil
          (u/select-keys-when dash-updates
            :present #{:description :position :collection_id :collection_position}
-           :non-nil #{:name :parameters :caveats :points_of_interest :show_in_getting_started :enable_embedding
+           :non-nil #{:name :parameters :caveats :setting :points_of_interest :show_in_getting_started :enable_embedding
                       :embedding_params :archived})))))
   ;; now publish an event and return the updated Dashboard
   (u/prog1 (Dashboard id)
