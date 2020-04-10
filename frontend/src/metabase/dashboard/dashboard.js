@@ -241,6 +241,27 @@ export const addTextDashCardToDashboard = function({
   });
 };
 
+export const addRichTextDashCardToDashboard = function({
+  dashId,
+}: {
+  dashId: DashCardId,
+}) {
+  const virtualRichTextCard = createCard();
+  virtualRichTextCard.display = "richText";
+  virtualRichTextCard.archived = false;
+
+  const dashcardOverrides = {
+    card: virtualRichTextCard,
+    visualization_settings: {
+      virtual_card: virtualRichTextCard,
+    },
+  };
+  return addDashCardToDashboard({
+    dashId: dashId,
+    dashcardOverrides: dashcardOverrides,
+  });
+};
+
 export const saveDashboardAndCards = createThunkAction(
   SAVE_DASHBOARD_AND_CARDS,
   function() {

@@ -15,6 +15,8 @@ import EmptyState from "metabase/components/EmptyState";
 
 import DashboardControls from "../hoc/DashboardControls";
 
+import { color } from "metabase/lib/colors";
+
 import _ from "underscore";
 import cx from "classnames";
 
@@ -63,6 +65,7 @@ type Props = {
   initialize: () => Promise<void>,
   addCardToDashboard: ({ dashId: DashCardId, cardId: CardId }) => void,
   addTextDashCardToDashboard: ({ dashId: DashCardId }) => void,
+  addRichTextDashCardToDashboard: ({ dashId: DashCardId }) => void,
   archiveDashboard: (dashboardId: DashboardId) => void,
   fetchCards: (filterMode?: string) => void,
   fetchDashboard: (dashboardId: DashboardId, queryParams: ?QueryParams) => void,
@@ -269,7 +272,11 @@ export default class Dashboard extends Component {
         error={error}
       >
         {() => (
-          <div className="full" style={{ overflowX: "hidden" }}>
+          <div className="full" style={{ overflowX: "hidden",
+            backgroundColor: dashboard.setting && dashboard.setting.bgColor ? color(dashboard.setting.bgColor) : color("dashboard_bg"),
+            backgroundSize: 'cover',
+            backgroundImage: dashboard.setting && dashboard.setting.imageUrl ? `url(${dashboard.setting.imageUrl})` : ''
+            }}>
             <header className="DashboardHeader relative z2">
               <DashboardHeader
                 {...this.props}

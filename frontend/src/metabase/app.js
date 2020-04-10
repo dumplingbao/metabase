@@ -35,6 +35,8 @@ import { getStore } from "./store";
 
 import { refreshSiteSettings } from "metabase/redux/settings";
 
+import {updateColors} from "metabase/lib/colors";
+
 // router
 import { Router, useRouterHistory } from "react-router";
 import { createHistory } from "history";
@@ -87,6 +89,11 @@ function _init(reducers, getRoutes, callback) {
     window[
       "ga-disable-" + MetabaseSettings.get("ga_code")
     ] = MetabaseSettings.isTrackingEnabled() ? null : true;
+  });
+
+  // 中划线下划线都可以
+  MetabaseSettings.on("application_colors", () => {
+    updateColors(MetabaseSettings.get("application_colors"));
   });
 
   window.Metabase = window.Metabase || {};

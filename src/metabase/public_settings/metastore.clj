@@ -156,7 +156,7 @@
 (defn enable-sandboxes?
   "Should we enable data sandboxes (row and column-level permissions?"
   []
-  (boolean ((token-features) "sandboxes")))
+  true)
 
 (defn enable-sso?
   "Should we enable SAML/JWT sign-in?"

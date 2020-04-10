@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { SketchPicker } from 'react-color'
 
 import PopoverWithTrigger from "metabase/components/PopoverWithTrigger";
 
 import { normal } from "metabase/lib/colors";
+import Button from "metabase/components/Button";
 
 const DEFAULT_COLOR_SQUARE_SIZE = 32;
 
@@ -31,10 +33,11 @@ class ColorPicker extends Component {
     size: PropTypes.number,
     triggerSize: PropTypes.number,
     value: PropTypes.string,
+    fancy: PropTypes.bool,
   };
 
   render() {
-    const { onChange, padding, size, triggerSize, value } = this.props;
+    const { onChange, padding, size, triggerSize, value, fancy } = this.props;
     const colors = this.props.colors || Object.values(normal).slice(0, 9);
     return (
       <div className="inline-block">
@@ -49,28 +52,43 @@ class ColorPicker extends Component {
             </div>
           }
         >
-          <div className="p1">
-            <ol
-              className="flex flex-wrap"
-              style={{
-                maxWidth: 120,
-              }}
-            >
-              {colors.map((color, index) => (
-                <li
-                  className="cursor-pointer"
-                  style={{ padding }}
-                  key={index}
-                  onClick={() => {
-                    onChange(color);
-                    this.refs.colorPopover.close();
-                  }}
-                >
-                  <ColorSquare color={color} size={size} />
-                </li>
-              ))}
-            </ol>
-          </div>
+          {fancy ? (
+            <div>
+              <div className="rounded overflow-hidden">
+                <SketchPicker color={value}  onChangeComplete={(value)=>{ onChange(value.hex)}} />
+              </div>
+              <div className="p1 border-top">
+                <Button onClick={() => {
+                  this.refs.colorPopover.close();
+                }}>
+                  Done
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="p1">
+              <ol
+                className="flex flex-wrap"
+                style={{
+                  maxWidth: 120,
+                }}
+              >
+                {colors.map((color, index) => (
+                  <li
+                    className="cursor-pointer"
+                    style={{ padding }}
+                    key={index}
+                    onClick={() => {
+                      onChange(color);
+                      this.refs.colorPopover.close();
+                    }}
+                  >
+                    <ColorSquare color={color} size={size} />
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </PopoverWithTrigger>
       </div>
     );

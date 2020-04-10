@@ -29,6 +29,13 @@ const COMMON_SETTINGS = {
     dashboard: true,
     useRawSeries: true,
   },
+  "dashcard.background": {
+    section: t`Display`,
+    title: t`Show background`,
+    dashboard: true,
+    widget: "toggle",
+    default: true,
+  },
 };
 
 function getSettingDefintionsForSeries(series: ?Series): SettingDefs {

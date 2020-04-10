@@ -1,6 +1,7 @@
 import React from "react";
 
 import { HAS_LOCAL_STORAGE } from "metabase/lib/dom";
+import MetabaseSettings from "metabase/lib/settings";
 
 // If enabled this monkeypatches `t` and `jt` to return blacked out
 // strings/elements to assist in finding untranslated strings.
@@ -32,7 +33,11 @@ const obfuscateString = (original, string) => {
     return string.toUpperCase();
   } else {
     // divide by 2 because Unicode `FULL BLOCK` is quite wide
-    return new Array(Math.ceil(string.length / 2) + 1).join("█");
+    if (window.localStorage["metabase-i18n-debug"]) {
+      return new Array(Math.ceil(string.length / 2) + 1).join("█");
+    } else {
+      return string.replace(/Metabase/g, MetabaseSettings.get("application-name") || MetabaseSettings.get("application_name"));
+    }
   }
 };
 
@@ -49,11 +54,17 @@ export function enableTranslatedStringReplacement() {
   };
   // eslint-disable-next-line react/display-name
   c3po.jt = (...args) => {
-    const elements = _jt(...args);
-    return <span style={{ backgroundColor: "currentcolor" }}>{elements}</span>;
+    const elements = _jt(...args).map(function (item,index) {
+      if (item && typeof item === "string") {
+        return item.replace(/Metabase/g, MetabaseSettings.get("application-name") || MetabaseSettings.get("application_name"));
+      }
+      return item;
+    });
+    return <span>{elements}</span>;
+    // return <span style={{ backgroundColor: "currentcolor" }}>{elements}</span>;
   };
 }
 
-if (HAS_LOCAL_STORAGE && window.localStorage["metabase-i18n-debug"]) {
+if (HAS_LOCAL_STORAGE ) {
   enableTranslatedStringReplacement();
 }

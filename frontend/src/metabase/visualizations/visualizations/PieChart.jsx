@@ -53,7 +53,8 @@ export default class PieChart extends Component {
   static minSize = { width: 4, height: 4 };
 
   static isSensible({ cols, rows }) {
-    return cols.length === 2;
+    return cols.filter(col => !col.remapped_from).length === 2;
+    // return cols.length === 2;
   }
 
   static checkRenderable(

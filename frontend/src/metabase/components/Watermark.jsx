@@ -50,32 +50,43 @@ export function watermark (props) {
     }
   }
 
-  console.log("loginName is :", Cookies.get('metabase.loginName'));
-  console.log("follow is :", follow);
   var canvas = document.getElementById('waterMark');
-  // canvas.width = window.innerWidth / 4;
-  // 文本宽度+间隔宽度
-  canvas.width = 300;
-  var ctx = canvas.getContext('2d');
-  ctx.font = '20px microsoft-yahei';
-  const date = formatDate(new Date(), 'yyyy-MM-dd hh:mm');
-  // const follow = localStorage.follow
-  ctx.fillStyle = 'rgba(0, 0, 0, .15)';
-  ctx.rotate(-Math.PI / 12);
-  // 后面的100可以控制宽度
-  if (follow.length > 4) {
-    // 换行显示
-    ctx.fillText(`${follow}`, 10, 100);
-    ctx.fillText(`${date}`, 10, 120);
-  } else {
-    ctx.fillText(`${follow} ${date}`, 10, 100);
-  }
-  var src = canvas.toDataURL('image/png');
-  var els = document.querySelectorAll(props.selector);
-  if (els && els.length > 0) {
-    els.forEach(function(element) {
-      element.style.backgroundImage = `url('${src}')`;
-    });
+  if (canvas) {
+    // canvas.width = window.innerWidth / 4;
+    // 文本宽度+间隔宽度
+    canvas.width = 300;
+    var ctx = canvas.getContext('2d');
+    ctx.font = '20px microsoft-yahei';
+    const watermarkContent = MetabaseSettings.get("watermark-content",'watermark-content-1');
+    let dateFormatStr = 'yyyy-MM-dd hh:mm';
+    if (watermarkContent == 'watermark-content-1') {
+      dateFormatStr = 'yyyy-MM-dd hh:mm';
+    } else if (watermarkContent == 'watermark-content-2') {
+      dateFormatStr = 'yyyy-MM-dd';
+    } else if (watermarkContent == 'watermark-content-3') {
+      dateFormatStr = 'yyyy/MM/dd hh:mm';
+    } else if (watermarkContent == 'watermark-content-4') {
+      dateFormatStr = 'yyyy/MM/dd';
+    }
+    const date = formatDate(new Date(), dateFormatStr);
+    // const follow = localStorage.follow
+    ctx.fillStyle = MetabaseSettings.get("watermark-color",'rgba(235,235,235)') || 'rgba(235,235,235)';
+    ctx.rotate(-Math.PI / 12);
+    // 后面的100可以控制宽度
+    if (follow.length > 4) {
+      // 换行显示
+      ctx.fillText(`${follow}`, 10, 100);
+      ctx.fillText(`${date}`, 10, 120);
+    } else {
+      ctx.fillText(`${follow} ${date}`, 10, 100);
+    }
+    var src = canvas.toDataURL('image/png');
+    var els = document.querySelectorAll(props.selector);
+    if (els && els.length > 0) {
+      els.forEach(function(element) {
+        element.style.backgroundImage = `url('${src}')`;
+      });
+    }
   }
 }
 
@@ -87,7 +98,6 @@ class Watermark extends Component {
 
   constructor(props) {
     super(props);
-    console.log("this.state.user is :", this.props.user);
   }
 
   componentDidMount() {
@@ -97,6 +107,9 @@ class Watermark extends Component {
   }
 
   render() {
+    if (MetabaseSettings.enableWatermark()) {
+      watermark(this.props);
+    }
     return (
       <div>
         <canvas id="waterMark" height="120" style={buttonStyle}></canvas>

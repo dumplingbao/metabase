@@ -35,6 +35,7 @@ import type { Dashboard } from "metabase/meta/types/Dashboard";
 import type { Parameter } from "metabase/meta/types/Parameter";
 
 import _ from "underscore";
+import {color} from "metabase/lib/colors";
 
 const mapStateToProps = (state, props) => {
   return {
@@ -162,7 +163,11 @@ export default class PublicDashboard extends Component {
           },
           "Dashboard--" + themeMode,
           )}
-          // style={{marginTop: -35}}
+          style={{ overflowX: "hidden",
+            backgroundColor: dashboard && dashboard.setting && dashboard.setting.bgColor ? color(dashboard.setting.bgColor) : color("dashboard_bg"),
+            backgroundSize: 'cover',
+            backgroundImage: dashboard && dashboard.setting && dashboard.setting.imageUrl ? `url(${dashboard.setting.imageUrl})` : ''
+          }}
           loading={!dashboard}
         >
           {() => (

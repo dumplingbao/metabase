@@ -183,9 +183,44 @@
                          u/lower-case-en)))
 
 (defsetting enable-watermark
-            (deferred-tru "水印格式为：当前用户名 + 当前时间")
+            (deferred-tru "是否启用水印功能")
             :type    :boolean
             :default true)
+
+(defsetting watermark-content
+            (deferred-tru "水印默认格式为：用户名 + 当前时间（年-月-日 时:分）")
+            :type    :string
+            :default "watermark-content-1")
+
+(defsetting watermark-color
+            (deferred-tru "水印的字体颜色")
+            :type    :string
+            :default "#EBEBEB")
+
+(defsetting application-name
+            (deferred-tru "This will replace the word \"Metabase\" wherever it appears.")
+            :type      :string
+            :default   "Metabase")
+
+(defsetting application-colors
+            (deferred-tru "These are the primary colors used in charts and throughout Metabase. You might need to refresh your browser to see your changes take effect.")
+            :type    :json
+            :default {})
+
+(defsetting application-logo-url
+            (deferred-tru "For best results, use an SVG file with a transparent background.")
+            :type    :string
+            :default "app/assets/img/mam-logo.svg")
+
+(defsetting application-favicon-url
+            (deferred-tru "The url or image that you want to use as the favicon.")
+            :type    :string
+            :default "frontend_client/favicon.ico")
+
+(defsetting landing-page
+            (deferred-tru "Default page to show the user")
+            :type    :string
+            :default "")
 
 (defn remove-public-uuid-if-public-sharing-is-disabled
   "If public sharing is *disabled* and OBJECT has a `:public_uuid`, remove it so people don't try to use it (since it
@@ -230,6 +265,8 @@
    :enable_query_caching  (enable-query-caching)
    :enable_xrays          (enable-xrays)
    :enable_watermark      (enable-watermark)
+   :watermark_content     (watermark-content)
+   :watermark_color     (watermark-color)
    :engines               (driver.u/available-drivers-info)
    :entities              (types/types->parents :entity/*)
    :ga_code               "UA-60817802-1"
@@ -245,6 +282,10 @@
    :report_timezone       (resolve-setting 'metabase.driver 'report-timezone)
    :setup_token           (resolve-setting 'metabase.setup 'token-value)
    :site_name             (site-name)
+   :application_name      (application-name)
+   :application_favicon_url      (application-favicon-url)
+   :application_colors      (application-colors)
+   :application_logo_url      (application-logo-url)
    :site_url              (site-url)
    :timezone_short        (short-timezone-name (setting/get :report-timezone))
    :timezones             common/timezones

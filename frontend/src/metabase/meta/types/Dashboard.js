@@ -15,6 +15,7 @@ export type Dashboard = {
   creator_id: number,
   description: ?string,
   caveats?: string,
+  setting: {},
   points_of_interest?: string,
   show_in_getting_started?: boolean,
   // incomplete
@@ -27,6 +28,7 @@ export type DashboardWithCards = {
   id: DashboardId,
   name: string,
   description: ?string,
+  setting: {},
   ordered_cards: Array<DashCard>,
   embedding_params: EmbeddingParams,
   // incomplete

@@ -42,7 +42,7 @@
 (defroutes ^{:doc "Top-level ring routes for Metabase."} routes
   ;; ^/$ -> index.html
   (GET "/" [] index/index)
-  (GET "/favicon.ico" [] (resp/resource-response "frontend_client/favicon.ico"))
+  (GET "/favicon.ico" [] (resp/resource-response (public-settings/application-logo-url)))
   ;; ^/api/health -> Health Check Endpoint
   (GET "/api/health" [] (if (init-status/complete?)
                           {:status 200, :body {:status "ok"}}

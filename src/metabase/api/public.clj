@@ -137,7 +137,7 @@
   "Return a public Dashboard matching key-value `conditions`, removing all columns that should not be visible to the
    general public. Throws a 404 if the Dashboard doesn't exist."
   [& conditions]
-  (-> (api/check-404 (apply db/select-one [Dashboard :name :description :id :parameters], :archived false, conditions))
+  (-> (api/check-404 (apply db/select-one [Dashboard :name :description :id :parameters :setting], :archived false, conditions))
       (hydrate [:ordered_cards :card :series] :param_values :param_fields)
       dashboard-api/add-query-average-durations
       (update :ordered_cards (fn [dashcards]
