@@ -127,13 +127,13 @@
   {:style/indent 3}
   ([export-format :- ExportFormat, respond :- (s/pred fn?), raise :- (s/pred fn?), in-chan :- ManyToManyChannel]
   (as-format-async export-format respond raise in-chan nil))
-  ([export-format :- ExportFormat, respond :- (s/pred fn?), raise :- (s/pred fn?), in-chan :- ManyToManyChannel, file-name, loginName]
+  ([export-format :- ExportFormat, respond :- (s/pred fn?), raise :- (s/pred fn?), in-chan :- ManyToManyChannel, file_name, loginName]
   (a/go
     (try
       (let [results (a/<! in-chan)]
         (if (instance? Throwable results)
           (raise results)
-          (respond (as-format-response export-format results file-name loginName))))
+          (respond (as-format-response export-format results file_name loginName))))
       (catch Throwable e
         (raise e))
       (finally
@@ -149,7 +149,7 @@
 
 (api/defendpoint-async POST ["/:export-format", :export-format export-format-regex]
   "Execute a query and download the result data as a file in the specified format."
-  [{{:keys [export-format query]} :params} respond raise loginName]
+  [{{:keys [export-format query file_name loginName]} :params} respond raise]
   {query         su/JSONString
    export-format ExportFormat}
   (let [{:keys [database] :as query} (json/parse-string query keyword)]
@@ -161,7 +161,7 @@
            (dissoc :constraints)
            (m/dissoc-in [:middleware :add-default-userland-constraints?])
            (assoc-in [:middleware :skip-results-metadata?] true))
-       {:executed-by api/*current-user-id*, :context (export-format->context export-format)}) loginName)))
+       {:executed-by api/*current-user-id*, :context (export-format->context export-format)}) file_name loginName)))
 
 
 ;;; ------------------------------------------------ Other Endpoints -------------------------------------------------
